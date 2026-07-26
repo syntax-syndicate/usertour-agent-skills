@@ -34,6 +34,18 @@ deployment (e.g. your app on `app.example.com`, Usertour on
 <!-- then the loader + usertour.init("<environment token>") -->
 ```
 
+That is the COMPLETE key set the loader/SDK reads, plus one more:
+`USERTOURJS_BROWSER_TARGET` (`"es2020"` | `"legacy"`) force-picks a bundle
+instead of the loader's user-agent sniff — only needed when the sniff guesses
+wrong (exotic webviews).
+
+**Serving a locally BUILT bundle (apps/sdk/dist)?** The dist layout carries a
+version layer — `/<version>/es2020/usertour.js` — and the bundle's baked-in CSS
+path expects `ASSETS_URI` to be the serve ROOT (it appends
+`/<version>/<target>/css/index.css` itself). Pointing `ASSETS_URI` at the
+target folder double-nests the path → CSS 404s → widgets render 0×0 with no
+error (this exact mistake has burned two debugging sessions).
+
 Confirm the exact key names + which are required against the docs above.
 
 ## Local dev vs full self-host — don't over-configure

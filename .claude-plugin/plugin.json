@@ -1,7 +1,7 @@
 {
   "name": "usertour",
   "description": "Skills for Usertour in-app onboarding — authoring content (flows, checklists, launchers, banners, surveys) and installing the Web SDK — via the Usertour API/MCP",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": {
     "name": "Usertour",
     "url": "https://www.usertour.io"

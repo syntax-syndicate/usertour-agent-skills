@@ -2,7 +2,7 @@
   "plugins": [
     {
       "name": "usertour",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "category": "Coding",
       "source": {
         "type": "local",
