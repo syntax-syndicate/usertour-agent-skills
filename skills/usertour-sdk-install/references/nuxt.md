@@ -13,7 +13,17 @@ cause of "I added it but nothing loads" on Nuxt).
 
 ## The client plugin
 
-`plugins/usertour.client.ts` (the `.client` suffix = browser-only):
+**Where the file goes depends on the Nuxt major** — get it wrong and the plugin
+is **silently ignored**: no error, no warning, the SDK just never starts (with
+an `app/` directory present, a root-level `plugins/` file isn't even registered
+in `.nuxt/types/plugins.d.ts`).
+
+- **Nuxt 4** (project has an `app/` directory — today's scaffold default):
+  `app/plugins/usertour.client.ts`
+- **Nuxt 3** (no `app/` directory): root-level `plugins/usertour.client.ts`
+- Not sure? Put it in a `plugins/` folder next to wherever `app.vue` lives.
+
+The `.client` suffix = browser-only:
 
 ```ts
 export default defineNuxtPlugin(() => {

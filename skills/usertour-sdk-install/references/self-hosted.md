@@ -8,7 +8,11 @@ nothing shows").
 
 **Canonical keys live in the docs — fetch, don't hardcode:**
 WebFetch `https://docs.usertour.io/open-source/usertourjs`. The values below are
-illustrative; the doc is the source of truth.
+illustrative; the doc is the source of truth **for key NAMES — but not for which
+to set**: ⚠️ that page presents all four keys as standard configuration, which
+is only true for a FULL self-host. Run the probe below first; on a 404, set
+only `WS_URI` and ignore the docs' all-four framing (following it points the
+bundle at a path your backend doesn't serve → 404 → nothing renders).
 
 ## Decide: same-origin or cross-origin?
 
@@ -76,7 +80,9 @@ your instance.
 
 > The npm `usertour.js` package is a thin loader that lazy-loads the real bundle
 > (from Cloud unless redirected), so `USERTOURJS_ENV_VARS` must be set **before**
-> `init()` even on the npm path — it's not only for the HTML snippet.
+> `init()` even on the npm path — it's not only for the HTML snippet. TS-strict
+> projects: the package ships no global type for it — declare it yourself
+> (`declare global { interface Window { USERTOURJS_ENV_VARS?: Record<string, string> } }`).
 
 > ⚠️ Point the endpoint **only** via `USERTOURJS_ENV_VARS.WS_URI`. Do **not** also
 > call the SDK's `setServerEndpoint()` (a legacy method still present in the
@@ -85,6 +91,17 @@ your instance.
 
 ## Verify it took
 
-In the browser console, confirm the SDK's network calls (websocket + `/sdk/…`)
-go to **your instance**, not `*.usertour.io`. If they still hit Cloud,
+In a human-driven browser, confirm the SDK's **data** calls go to your instance.
+Two traps first:
+
+- In the **local-dev shape the bundle/CSS legitimately still load from Cloud**
+  (`js.usertour.io`) — a request list full of Cloud entries and zero
+  `localhost` entries is the EXPECTED look, not a misconfiguration.
+- Under **automation** the websocket usually doesn't appear in request lists or
+  resource timing at all — don't assert it there. Use the server-side loop
+  instead: content that exists only on your instance renders, and MCP
+  `get_user` / `list_sessions` shows the identify/session landed — see
+  verify.md § 3½.
+
+If data genuinely still hits Cloud (nothing lands on your instance),
 `USERTOURJS_ENV_VARS` wasn't set before `init()`.

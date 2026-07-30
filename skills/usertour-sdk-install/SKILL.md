@@ -30,8 +30,9 @@ ask the user for the environment token (Settings → Environments) — it is the
 ## Workflow
 
 1. **Detect the app** — read `package.json` / file layout to classify it: plain
-   HTML, React (Vite/CRA), Next.js (app vs pages router), or Vue/Nuxt. Load only
-   the matching `references/<framework>.md`.
+   HTML (`plain-html.md`), React (Vite/CRA — `react.md`), Next.js (app vs pages
+   router — `nextjs.md`), Vue SPA (`vue.md`), or Nuxt (`nuxt.md`). Load only the
+   matching `references/<framework>.md`.
 2. **Get the snippet + API** — WebFetch the usertour.js reference above; also call
    `get_authoring_guide`. Don't reconstruct the loader from memory — read it.
 3. **Get the environment token** — call `list_environments` and use the primary

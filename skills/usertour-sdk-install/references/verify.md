@@ -34,7 +34,12 @@ one wired):
   just assert the host + iframe exist) instead of concluding "nothing rendered."
   The SDK swaps the iframe surface per step, so re-query it each step — a
   `contentDocument` reference held from a previous step goes stale (reads null),
-  and a stale null can look like a trigger that didn't fire.
+  and a stale null can look like a trigger that didn't fire. And don't assume
+  YOURS is the only widget: other published content in the environment (an old
+  flow, a resource-center launcher, an announcement) may auto-start for your
+  test user at the same time and stack on screen — expected, not a broken
+  install. Enumerate every `iframe.usertour-widget-surface-viewport` and pick
+  yours by its step text; never grab "the first iframe".
 - **Driving (not just reading) the widget programmatically** has two extra
   gotchas: accessibility snapshots show the iframe as an opaque "Content Frame"
   (no clickable uids inside — dispatch events via `contentDocument` instead),
@@ -42,6 +47,26 @@ one wired):
   `.click()` — dispatch the full pointer sequence
   (`pointerdown → mousedown → pointerup → mouseup → click`) when a programmatic
   click seems to do nothing.
+
+## 3½. Data-plane check that works under automation (local / self-hosted)
+
+"Watch the websocket in the network panel" is **not executable** in most
+automated setups: the SDK's websocket typically does NOT appear in
+DevTools-protocol request lists or `performance.getEntriesByType('resource')`,
+and on a local/self-hosted install the request list is dominated by Cloud CDN
+entries (`js.usertour.io` bundle/CSS) — which is the EXPECTED look in the
+local-dev shape (the bundle stays on Cloud; see self-hosted.md), not a
+misconfiguration. Assert **server-side** instead:
+
+1. the render assertion above passes, then
+2. MCP `get_user(<the id you identified>)` — a `first_seen_at` stamped at
+   page-load time proves `identify()` reached YOUR instance;
+3. MCP `list_sessions` filtered to your content + user — a session recorded for
+   content that only exists on your instance is sufficient proof the SDK's data
+   plane (`WS_URI`) points at it.
+
+One render + one MCP read closes the loop on both the identify linkage and the
+endpoint pointing — strictly stronger than eyeballing a network panel.
 
 ## 4. Security check
 

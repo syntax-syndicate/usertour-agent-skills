@@ -9,7 +9,7 @@
       "name": "usertour",
       "source": "./",
       "description": "Skills for authoring Usertour in-app onboarding content",
-      "version": "0.3.2"
+      "version": "0.3.3"
     }
   ]
 }
