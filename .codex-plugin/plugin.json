@@ -1,6 +1,6 @@
 {
   "name": "usertour",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Skills for Usertour in-app onboarding — authoring content (flows, checklists, launchers, banners, surveys) and installing the Web SDK — via the Usertour API/MCP",
   "author": {
     "name": "Usertour",
@@ -9,7 +9,17 @@
   "homepage": "https://docs.usertour.io",
   "repository": "https://github.com/usertour/skills",
   "license": "MIT",
-  "keywords": ["usertour", "onboarding", "product-tour", "checklist", "in-app", "mcp", "user-onboarding", "sdk", "install"],
+  "keywords": [
+    "usertour",
+    "onboarding",
+    "product-tour",
+    "checklist",
+    "in-app",
+    "mcp",
+    "user-onboarding",
+    "sdk",
+    "install"
+  ],
   "skills": "./skills/",
   "mcpServers": "./.codex-plugin/mcp.json"
 }

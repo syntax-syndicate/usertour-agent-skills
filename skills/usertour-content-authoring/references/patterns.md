@@ -100,6 +100,17 @@ copy changes and i18n). If you don't know the app's DOM, ask for a verified
 selector rather than guessing — a flow that points at a missing or wrong element
 renders nothing. (Exact `target` fields: `get_content_schema`.)
 
+**Shared components need page scoping.** A reused component (a table toolbar, a
+generic dialog) serving several pages emits the SAME selector everywhere — so
+`[data-tour='toolbar-filter']` on the Tasks page also matches on Users, and the
+runtime takes the first match on whatever page the step fires. Two patterns that
+work: scope through a page-level ancestor
+(`[data-page='tasks'] [data-tour='toolbar-filter']` — give each page container a
+stable marker), or thread a `data-tour` PROP through the shared component so each
+page instance renders its own value (`<DataTableToolbar dataTour="tasks-toolbar" />`).
+Pair either with the step's `current_url` gating so the step can only fire on its
+own page.
+
 ## Always verify — every interactive path, not just "does it appear"
 
 `validate_content_version` proves it *can* publish, not that it *works* — and "it
@@ -114,3 +125,33 @@ the app as the identified end-user and actually walk it:
 - **Gating** — the surface appears when (and only when) it should.
 
 Don't claim "done" off the happy path alone.
+
+### Driving it in a real browser (agents)
+
+Usertour renders inside its OWN same-origin iframes, not the host DOM — so
+`document.body.innerText` / a11y-tree queries never match what's on screen, and
+an a11y snapshot shows only empty content frames. Read and drive the widget
+through the iframe document instead:
+
+```js
+// read what's on screen (flow surface; banners use usertour-widget-banner-frame)
+const frame = document.querySelector('iframe.usertour-widget-surface-viewport');
+const text = frame?.contentDocument?.body?.innerText;
+
+// click a widget button by its label
+[...frame.contentDocument.querySelectorAll('button')]
+  .find((b) => b.textContent?.trim() === 'Next')?.click();
+
+// star ratings ignore a bare click — dispatch the full pointer sequence
+const star = frame.contentDocument.querySelectorAll('[role="radio"], .star')[3];
+for (const type of ['pointerdown', 'pointerup', 'click']) {
+  star.dispatchEvent(new PointerEvent(type, { bubbles: true }));
+}
+```
+
+Or just screenshot — pixels see through iframes. Two session traps while
+testing: banner / launcher / resource center are SINGLE-SESSION (one per user,
+for life) — to re-test, delete the old session (`list_sessions({ contentId,
+userId })` → `delete_session`) rather than rotating externalIds; and never call
+`usertour.endAll()` as "cleanup" — it permanently burns every single-session
+surface for that user (recoverable only by that same session delete).

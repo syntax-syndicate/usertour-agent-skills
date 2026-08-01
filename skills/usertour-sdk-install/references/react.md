@@ -39,7 +39,24 @@ Notes:
   the route-change hook / `usertour.start()` on the relevant screen.
 - **Flow `navigate` actions:** so a flow step's navigate uses SPA soft-nav (not a
   full reload that drops the in-progress flow), wire `usertour.setCustomNavigate()`.
-  The callback gets a URL **string**; React Router takes it directly, but
-  **TanStack Router** needs `setCustomNavigate(url => router.navigate({ to: url }))`.
+  The callback gets a URL **string**; React Router takes it directly. **TanStack
+  Router**'s `to` is strictly typed against your route tree, so a raw string fails
+  the type check — and content URLs can be external. Handle both:
+
+  ```ts
+  usertour.setCustomNavigate((url) => {
+    if (/^https?:\/\//.test(url)) {
+      window.location.assign(url); // external link — leave the SPA
+      return;
+    }
+    router.navigate({ to: url as string as any }); // runtime-known path, not in the typed tree
+  });
+  ```
+
   See [troubleshooting.md](troubleshooting.md).
+- **Sticky/fixed headers:** tooltip auto-scroll can land the target UNDER a sticky
+  header (nearly every admin layout has one). Wire
+  `usertour.setCustomScrollIntoView((el) => el.scrollIntoView({ block: "center" }))`
+  — centering keeps the target clear of both sticky headers and bottom bars. Also
+  needed for custom scroll containers the default scroll never reaches.
 - Mount `<UsertourBootstrap user={currentUser} />` once high in the tree.

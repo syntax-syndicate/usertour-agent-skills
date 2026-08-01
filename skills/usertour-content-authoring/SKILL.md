@@ -65,8 +65,10 @@ Design the experience first (above), then build it:
 6. **Validate** — `validate_content_version`; fix every error before publishing.
 7. **Publish** — `publish_content` (per environment; idempotent).
 8. **Verify** — load the app as the identified end-user and walk every interactive
-   path, not just that it renders (see [patterns.md](references/patterns.md) →
-   Always verify). Don't claim "done" before this.
+   path, not just that it renders. The widget lives in same-origin IFRAMES — host
+   DOM / a11y-tree queries see nothing; read `iframe.contentDocument` or
+   screenshot (ready-made snippets: [patterns.md](references/patterns.md) →
+   Always verify → Driving it in a real browser). Don't claim "done" before this.
 
 ## Going deeper
 
