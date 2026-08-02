@@ -60,8 +60,14 @@ copying the all-four-keys block for a *local backend* points `ASSETS_URI` /
 → the bundle 404s and nothing renders.
 
 **Not sure which you are?** Probe whether the backend serves the SDK bundle:
-`curl <backend>/sdk/es2020/usertour.js` — **200** ⇒ full self-host (set all keys);
-**404** ⇒ local dev (set only `WS_URI`, bundle stays on Cloud).
+`curl <backend>/sdk/es2020/usertour.js` — **200** ⇒ full self-host (set all keys).
+On **404, do NOT conclude local dev yet**: a locally-BUILT dist serves under a
+version layer, so also try `curl <backend>/sdk/<version>/es2020/usertour.js`
+(version = apps/sdk/package.json, e.g. `0.7.9`) or list `curl <backend>/sdk/` —
+a 200 there is still full self-host (with the versioned URL/ASSETS_URI forms
+above). Only when BOTH miss ⇒ local dev (set only `WS_URI`, bundle stays on
+Cloud). Mis-probing this cascades: full self-host misread as local dev loads
+the Cloud bundle against your backend.
 
 **Local dev — your app talks to a local backend, bundle stays on Cloud (the
 common case).** Set **only `WS_URI`**; leave the asset/bundle keys unset so the

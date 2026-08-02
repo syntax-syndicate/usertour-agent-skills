@@ -46,7 +46,16 @@ one wired):
   and some controls (e.g. the resource-center launcher) ignore a bare
   `.click()` — dispatch the full pointer sequence
   (`pointerdown → mousedown → pointerup → mouseup → click`) when a programmatic
-  click seems to do nothing.
+  click seems to do nothing. When matching list rows / buttons by text, compare
+  `textContent.trim() === label` EXACTLY — a `startsWith`/contains match can hit
+  the same words inside a greeting or description elsewhere in the panel.
+  (Ready-made read/click/rating snippets: the `usertour-content-authoring`
+  skill → patterns.md → "Driving it in a real browser".)
+- **Never "clean up" with `usertour.endAll()`.** Banner, launcher, and resource
+  center are SINGLE-SESSION — one session per user for life — and `endAll()`
+  ends them permanently for that test user (they simply never appear again; no
+  error). To re-test one, delete its session instead:
+  `list_sessions({ contentId, userId })` → `delete_session(id)` via the MCP.
 
 ## 3½. Data-plane check that works under automation (local / self-hosted)
 
