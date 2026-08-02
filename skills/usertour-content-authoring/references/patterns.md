@@ -42,7 +42,8 @@ step. Don't fix it by deleting the step — make it react: advance on the step's
 target click, and/or when a condition becomes true (reached a page, an element
 appeared) no matter how the user got there, and keep a button as the fallback.
 Layer all three so a contextual step feels smooth instead of "click-our-button"
-linear. (The field shapes — `onClick`, `triggers` — are in `get_authoring_guide`.)
+linear. (The field shapes — `onClick`, `triggers` — are in `get_authoring_guide`,
+section `flow-steps`.)
 
 **For "the user completed an action," advance on the result — not the submit
 click.** A submit / save / confirm click is only an *attempt*: if the action is
@@ -60,7 +61,8 @@ If more than one piece can appear on its own (a welcome flow + a checklist + a
 launcher), they pile onto the first screen at once. Show one, then reveal the next
 when the first is done — gate the later surface's start rules on the first's state
 (e.g. "the welcome flow has been seen and is now closed"). One focused thing at a
-time. (How to gate on another content's state — `get_authoring_guide`.)
+time. (How to gate on another content's state — `get_authoring_guide`, section
+`orchestration`.)
 
 ## One idea per surface
 

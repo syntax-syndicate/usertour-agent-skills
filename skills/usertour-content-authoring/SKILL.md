@@ -14,7 +14,7 @@ always current.
 
 | Source | How | Use for |
 |--------|-----|---------|
-| `get_authoring_guide` (MCP tool) | call it at the start | Lifecycle, step types, markdown subset, frequency, what each type needs to publish |
+| `get_authoring_guide` (MCP tool) | no-arg call at the start → core + a table of contents; then fetch the sections for your content type in ONE array call (`section: [...]`) | Lifecycle + per-type publish requirements come inline; step types, conditions, start rules, markdown subset etc. are named sections |
 | `get_content_schema` (MCP tool) | `get_content_schema({ type })` | The exact write body — `steps` for `flow`, `data` for checklist/launcher/banner/tracker/announcement/resource-center. **Fetch before authoring a non-flow type** (its `data` is polymorphic). |
 | `validate_content_version` (MCP tool) | dry-run a draft | The publishable-or-not check + precise errors |
 | v2 docs | https://docs.usertour.io (API reference v2 → Concepts) | Human reference: blocks, conditions & actions, rules, type data |
@@ -54,7 +54,10 @@ sequence on unrelated tasks.
 
 Design the experience first (above), then build it:
 
-1. **Read the guide** — call `get_authoring_guide`.
+1. **Read the guide** — call `get_authoring_guide` with no args (the core +
+   a table of contents), then fetch the sections for your content type in one
+   array call — pick by each section's `appliesTo`, or take the `guideSections`
+   list that `get_content_schema` returns for the type.
 2. **Pick a theme** — `list_themes`; pass a `themeId` to `create_content` (every
    visual type needs one). Use the `isDefault` theme if unsure.
 3. **Fetch the schema** — `get_content_schema({ type })` for the body you'll write.

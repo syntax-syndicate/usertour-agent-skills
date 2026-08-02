@@ -12,7 +12,9 @@ Follow the `usertour-content-authoring` skill. Steps:
 
 1. Read `skills/usertour-content-authoring/SKILL.md` and
    `skills/usertour-content-authoring/references/patterns.md`.
-2. Call the `get_authoring_guide` MCP tool for the current conventions.
+2. Call the `get_authoring_guide` MCP tool with no args (core conventions + a
+   table of contents), then fetch the sections for the content types you'll
+   build in one array call.
 3. **Design first** — decide who / one action / when / done, then pick the
    content type(s) using the skill's design defaults (parallel tasks → checklist,
    not a grand tour; first-run flow 3–5 steps; trigger on context, not on load).

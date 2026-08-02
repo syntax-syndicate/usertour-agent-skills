@@ -18,7 +18,7 @@ retrieval**: read the live docs for the snippet, and get the token from the MCP.
 |--------|-----|---------|
 | usertour.js installation | WebFetch https://docs.usertour.io/developers/usertourjs-reference/installation | The loader snippet + CDN URL, `npm install usertour.js`, and `init` / `identify` usage |
 | usertour.js method signatures | Read the package's TypeScript types: `node_modules/usertour.js/dist/types/usertour.d.ts` | Exact signatures for host-integration hooks (`setCustomNavigate` SPA nav, `setCustomScrollIntoView`, `registerCustomInput`, `setBaseZIndex`, `setUrlFilter`, `setLinkUrlDecorator`) — the shipped types are authoritative when the docs' method list is incomplete. ⚠️ The types also list legacy methods — do NOT call `setServerEndpoint()` (see self-hosted.md). |
-| `get_authoring_guide` (MCP tool) | call it | The "Making it appear (the SDK)" section — the cross-surface gotchas |
+| `get_authoring_guide` (MCP tool) | call it with `{ "section": ["sdk", "host-dependencies"] }` | The SDK wiring + host-hook gotchas, without the rest of the authoring guide |
 | `list_environments` (MCP tool) | call it | The **environment token** for `init()` (the `token` field) |
 | Self-hosted SDK config | WebFetch https://docs.usertour.io/open-source/usertourjs | `USERTOURJS_ENV_VARS` keys when the instance isn't Usertour Cloud |
 | Identity verification guide | WebFetch https://docs.usertour.io/developers/identity-verification | Backend-signed identify JWTs, when the environment enforces them |
@@ -34,7 +34,8 @@ ask the user for the environment token (Settings → Environments) — it is the
    router — `nextjs.md`), Vue SPA (`vue.md`), or Nuxt (`nuxt.md`). Load only the
    matching `references/<framework>.md`.
 2. **Get the snippet + API** — WebFetch the usertour.js reference above; also call
-   `get_authoring_guide`. Don't reconstruct the loader from memory — read it.
+   `get_authoring_guide` with `{ "section": ["sdk", "host-dependencies"] }`.
+   Don't reconstruct the loader from memory — read it.
 3. **Get the environment token** — call `list_environments` and use the primary
    environment's `token`. This is the public SDK token for `init()`.
    ⛔ **Never** put the API token (`utp_…`, used for this MCP) in client code — it
