@@ -1,6 +1,6 @@
 ---
 name: usertour-content-authoring
-description: Author and publish Usertour in-app onboarding content — flows (tours), checklists, launchers, banners, announcements (release notes / product news), surveys, trackers — via the Usertour API/MCP. Use when the user mentions Usertour, building a product tour / onboarding / in-app guide / checklist, or asks to create, update, validate, or publish Usertour content. Biases toward retrieving the live schema and authoring guide from the Usertour MCP over pre-trained knowledge.
+description: Author and publish Usertour in-app onboarding content — flows (tours), checklists, launchers, banners, announcements (release notes / product news), surveys, trackers — via the Usertour API/MCP. Use when the user mentions Usertour, building a product tour / onboarding / in-app guide / checklist, or asks to create, update, validate, translate / localize, or publish Usertour content. Biases toward retrieving the live schema and authoring guide from the Usertour MCP over pre-trained knowledge.
 ---
 
 # Usertour content authoring
@@ -66,8 +66,17 @@ Design the experience first (above), then build it:
    Top-level fields merge, but a list you send (`steps`, checklist `items`) replaces
    that whole list — see `get_authoring_guide`.
 6. **Validate** — `validate_content_version`; fix every error before publishing.
-7. **Publish** — `publish_content` (per environment; idempotent).
-8. **Verify** — load the app as the identified end-user and walk every interactive
+7. **Translate, if the project is multilingual** — `list_localizations`; anything
+   beyond the default locale means users may be reading a translation. After ANY
+   text change, read `get_content_version` with `expand: ["localizations"]` and
+   bring every enabled locale back to zero `missing` / `outdated`:
+   `get_version_localization` for the units, then ONE `update_version_localization`
+   call per locale. Nothing blocks a publish with stale translations — skip this
+   and those users keep the old wording. Asked to translate existing content? Same
+   loop; a published version must be forked first (`create_content_version`
+   carries the translations along). Rules: the guide's `localization` section.
+8. **Publish** — `publish_content` (per environment; idempotent).
+9. **Verify** — load the app as the identified end-user and walk every interactive
    path, not just that it renders. The widget lives in same-origin IFRAMES — host
    DOM / a11y-tree queries see nothing; read `iframe.contentDocument` or
    screenshot (ready-made snippets: [patterns.md](references/patterns.md) →
