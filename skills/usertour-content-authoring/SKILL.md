@@ -68,9 +68,12 @@ Design the experience first (above), then build it:
 6. **Validate** — `validate_content_version`; fix every error before publishing.
 7. **Translate, if the project is multilingual** — `list_localizations`; anything
    beyond the default locale means users may be reading a translation. (Asked for a
-   language that isn't there? `create_localization` adds it. Locale tools need the
-   localization scopes — without them, the same codes come back from the expand
-   below.) After ANY text change, read `get_content_version` with
+   language that isn't there? `create_localization` adds it — copy the tag and
+   language name from the catalog in the guide's `localization` section rather
+   than improvising: `name` is what machine translation is asked to translate
+   INTO. Locale tools need the localization scopes — without them, the same codes
+   come back from the expand below.) After ANY text change, read
+   `get_content_version` with
    `expand: ["localizations"]` and bring every enabled locale back to zero
    `missing` / `outdated`:
    `get_version_localization` for the units, then ONE `update_version_localization`
